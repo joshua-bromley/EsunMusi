@@ -10,6 +10,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 #include "Player.h"
 #include "Market.h"
 #include "Map.h"
@@ -20,7 +22,7 @@ public:
 	void run(sf::RenderWindow&);
 private:
 	Player player;
-	Market markets[4];
+	Market markets[5];
 	Map map;
 
 	int date;
@@ -29,11 +31,13 @@ private:
 	sf::Text upgradeText[4];
 	sf::Text wealth;
 	sf::Text inventory[5];
+	sf::Text clock;
 
 	void update();
 	void upgrade(int);
 	void buyResources(int, bool);
 	void move();
+	void draw(sf::RenderWindow&);
 	std::string iToS(int);
 };
 
@@ -118,7 +122,7 @@ void Game::update(){
 
 	wealth.setString(iToS(player.getMoney()));
 
-	inventory[0].setString(iToS(player.getPossesion()) + "//" + iToS(player.getCapacity()));
+	inventory[0].setString(iToS(player.getPossesion()) + "/" + iToS(player.getCapacity()));
 
 	for(int i = 0; i < 4; i++){
 		inventory[i+1].setString(iToS(player.getResource(i)));
@@ -128,6 +132,35 @@ void Game::update(){
 	upgradeText[1].setString(iToS(2*player.getSpeed()));
 	upgradeText[2].setString(iToS(2*player.getEfficiency()));
 	upgradeText[3].setString(iToS(2*player.getDefence()));
+
+	clock.setString(iToS(date));
+
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			int a = rand()%5 - 2;
+			markets[i].adjustPrices(j,a);
+		}
+	}
+
+
+}
+
+void Game::draw(sf::RenderWindow& window){
+	markets[player.getLocation()].draw(window);
+
+	for(int i = 0; i < 4; i++){
+		window.draw(resourcePurchase[i]);
+		window.draw(upgradeText[i]);
+		window.draw(inventory[i]);
+	}
+
+	window.draw(inventory[5]);
+	window.draw(wealth);
+	window.draw(clock);
+
+	player.draw(window);
+
+	map.draw(window);
 }
 
 std::string Game:: iToS(int a){
@@ -141,6 +174,8 @@ std::string Game:: iToS(int a){
 	}
 	return b;
 }
+
+
 
 
 #endif /* GAME_H_ */

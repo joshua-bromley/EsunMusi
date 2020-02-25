@@ -12,7 +12,7 @@
 
 class Player{
 public:
-	Player(int[]);
+	Player();
 
 	int getCapacity() const {
 		return capacity;
@@ -96,6 +96,8 @@ public:
 		this->location = location;
 	}
 
+	void draw(sf::RenderWindow&);
+
 private:
 	int money;
 	int possesion;
@@ -110,8 +112,19 @@ private:
 
 };
 
-Player::Player(int inputs[]){
+Player::Player(){
+	money = 20;
+	possesion = 0;
+	capacity = 5;
+	speed = 1;
+	efficiency = 1;
+	defence = 1;
+	location = 0;
+	resources = {};
 
+	ship.setSize(sf::Vector2f(200,100));
+	ship.setFillColor(sf::Color::Blue);
+	ship.setPosition(sf::Vector2f(400,700));
 }
 
 void Player::addResource(int type, bool subtract){
@@ -126,6 +139,10 @@ void Player::addResource(int type, bool subtract){
 
 int Player::getResource(int type){
 	return resources[type];
+}
+
+void Player::draw(sf::RenderWindow& window){
+	window.draw(ship);
 }
 
 #endif /* PLAYER_H_ */

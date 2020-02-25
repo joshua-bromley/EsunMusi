@@ -69,6 +69,16 @@ void Map::setFullScreenMode(bool full){
 	}
 }
 
+void Map::draw(sf::RenderWindow& window){
+	window.draw(sprite);
+	if(fullscreen){
+		window.draw(exitSprite);
+	}
+	for(int i = 0; i < 5; i++){
+		window.draw(cities[i]);
+	}
+}
+
 
 
 #endif /* MAP_H_ */
